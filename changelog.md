@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🚀 Features
+
+- Set up changelogs
+
+### 🐛 Bug Fixes
+
+- Adjusted items to ignore and update repo
+- Adjusted gitignore to remove maelstrom
+
 ## [1.0.0] - 2025-08-30
 
 ### 🚀 Features

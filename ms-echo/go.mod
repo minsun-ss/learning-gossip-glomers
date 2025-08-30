@@ -1,4 +1,4 @@
-module maelstrom-echo
+module ms-echo
 
 go 1.24.5
 
