@@ -13,5 +13,12 @@
 	@rm -f maelstrom-unique-ids
 
 
+3:
+	@echo "Testing broadcast..."
+	@rm -f maelstrom-broadcast
+	@cd ms-broadcast && go build -o ../maelstrom-broadcast
+	@./maelstrom/maelstrom test -w broadcast --bin ./maelstrom-broadcast --node-count 1 --time-limit 20 --rate 10
+	@rm -f maelstrom-broadcast
+
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md
