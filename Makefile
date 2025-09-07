@@ -12,12 +12,19 @@
 	@./maelstrom/maelstrom test -w unique-ids --bin ./maelstrom-unique-ids --time-limit 30 --rate 1000 --node-count 3 --availability total --nemesis partition
 	@rm -f maelstrom-unique-ids
 
-3:
-	@echo "Testing broadcast..."
+3a:
+	@echo "Testing broadcast part A..."
 	@rm -f maelstrom-broadcast
 	@cd ms-broadcast && go build -o ../maelstrom-broadcast
 	@./maelstrom/maelstrom test -w broadcast --bin ./maelstrom-broadcast --node-count 1 --time-limit 20 --rate 10
 	@rm -f maelstrom-broadcast
+
+3b:
+	@echo "Testing broadcast part B..."
+	@rm -f maelstrom-broadcast2
+	@cd ms-broadcast2 && go build -o ../maelstrom-broadcast2
+	@./maelstrom/maelstrom test -w broadcast --bin ./maelstrom-broadcast2 --node-count 5 --time-limit 20 --rate 10
+	@rm -f maelstrom-broadcast2
 
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md

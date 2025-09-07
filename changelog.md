@@ -2,20 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.2.0] - 2025-09-07
+
+### 🚀 Features
+
+- Finished challenge 3b
+
+### 🐛 Bug Fixes
+
+- Adjusted the 3b make commands to remove binary after testing
+
 ## [3.1.0] - 2025-09-07
 
 ### 🚀 Features
 
-- Set up changelogs
 - Adjusted names of the gossip glomer tests and updated Makefile
 - Updated the echo with challenge details
-- Set up challenge 3 and updated readme
-- Implemented single node semantics...?
-
-### 🐛 Bug Fixes
-
-- Adjusted items to ignore and update repo
-- Adjusted the makefile for first test and prepended changelog
+- Set up challenge 3 and updaed readme
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -28,14 +31,11 @@ All notable changes to this project will be documented in this file.
 ### 🚀 Features
 
 - Set up changelogs
-- Adjusted names of the gossip glomer tests
 - Adjusted the Makefile for unique id 2
 - Worked through gossip glomers 2
 
 ### 🐛 Bug Fixes
 
-- Adjusted items to ignore and update repo
-- Adjusted gitignore to remove maelstrom
 - Adjusted the makefile for first test
 - Adjusted makefile for prepended changelog
 
@@ -48,10 +48,6 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
-### 🐛 Bug Fixes
-
-- Adjusted items to ignore and update repo
-- Adjusted gitignore to remove maelstrom
 - Adjusted the makefile for first test
 - Removed malestrom binaries
 
