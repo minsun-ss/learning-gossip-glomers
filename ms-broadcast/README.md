@@ -1,4 +1,4 @@
-# Challenge 3: Echo
+# Challenge 3: Broadcast (Part A)
 
 https://fly.io/dist-sys/3a/
 

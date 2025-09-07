@@ -8,8 +8,6 @@ import (
 )
 
 func main() {
-	// logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-	// logger.Info("Shoop")
 	n := maelstrom.NewNode()
 
 	n.Handle("generate", func(msg maelstrom.Message) error {
