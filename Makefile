@@ -24,6 +24,7 @@
 	@rm -f maelstrom-broadcast2
 	@cd ms-broadcast2 && go build -o ../maelstrom-broadcast2
 	@./maelstrom/maelstrom test -w broadcast --bin ./maelstrom-broadcast2 --node-count 5 --time-limit 20 --rate 10
+	@rm -f maelstrom-broadcast2
 
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md
