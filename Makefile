@@ -12,7 +12,6 @@
 	@./maelstrom/maelstrom test -w unique-ids --bin ./maelstrom-unique-ids --time-limit 30 --rate 1000 --node-count 3 --availability total --nemesis partition
 	@rm -f maelstrom-unique-ids
 
-
 3:
 	@echo "Testing broadcast..."
 	@rm -f maelstrom-broadcast
