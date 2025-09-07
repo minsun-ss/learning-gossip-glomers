@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.1.0] - 2025-09-07
+
+### 🚀 Features
+
+- Set up changelogs
+- Adjusted names of the gossip glomer tests and updated Makefile
+- Updated the echo with challenge details
+- Set up challenge 3 and updated readme
+- Implemented single node semantics...?
+
+### 🐛 Bug Fixes
+
+- Adjusted items to ignore and update repo
+- Adjusted the makefile for first test and prepended changelog
+
+### ⚙️ Miscellaneous Tasks
+
+- Changelog and version tracking
+- Removing unnecessary binaries
+- Also removed the uniqueids binaries
+
 ## [2.0.0] - 2025-08-30
 
 ### 🚀 Features
