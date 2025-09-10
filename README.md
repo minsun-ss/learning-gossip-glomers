@@ -6,8 +6,17 @@ Part of Recurse Fall 2025 DDIA readings!
 
 # Thoughts
 
-Challenge 1: very straightforward, more a setup than anything else.
+## Challenge 1: 
 
-Challenge 2: I think the use of golang makes this easier than it could be? If I needed to provide an int ID, though, I think this might be more challenging.
+Very straightforward, more a setup than anything else.
 
-Challenge 3: 3a was very straightforward on single node setup...
+## Challenge 2: 
+
+I think the use of golang makes this easier than it could be? If I needed to provide an int ID, though, I think this might be more challenging.
+
+## Challenge 3: 
+
+- 3a was very straightforward on single node setup...
+- ...and so was 3b, if you are ok with thinking topology never changes once provided to you (which... probably seems wrong on a distributed setup)
+- I did not realize 3c existed until John told me about it. T_T (5 minutes later) Oh wait, my part 2 works fine with it
+
