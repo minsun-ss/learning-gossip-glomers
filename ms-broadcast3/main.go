@@ -11,10 +11,8 @@ import (
 	maelstrom "github.com/jepsen-io/maelstrom/demo/go"
 )
 
-var n maelstrom.Node
 var NodeID string
 var seen []int
-var queuedMessages []QueuedMessage
 var mu sync.Mutex
 
 type QueuedMessage struct {
@@ -23,22 +21,19 @@ type QueuedMessage struct {
 	Msg         map[string]any
 }
 
-// so if I understand correctly, RPC will return an acknowledgement
+func ReadHandler(n *maelstrom.Node) func(msg maelstrom.Message) error {
+	return func(msg maelstrom.Message) error {
+		result := map[string]any{}
 
-func main() {
-	n := maelstrom.NewNode()
-	topology := map[string][]string{}
+		result["type"] = "read_ok"
+		result["messages"] = seen
 
-	// need to figure out the nodes
-	n.Handle("init", func(msg maelstrom.Message) error {
-		// result := map[string]any{}
-		NodeID = n.ID()
-		log.Printf("What is my id: %s", NodeID)
+		return n.Reply(msg, result)
+	}
+}
 
-		return nil
-	})
-
-	n.Handle("broadcast", func(msg maelstrom.Message) error {
+func BroadcastHandler(n *maelstrom.Node) func(msg maelstrom.Message) error {
+	return func(msg maelstrom.Message) error {
 		result := map[string]any{}
 		var body map[string]any
 		if err := json.Unmarshal(msg.Body, &body); err != nil {
@@ -57,27 +52,19 @@ func main() {
 		containsMessage := slices.Contains(seen, messageInt)
 
 		if !containsMessage {
+			mu.Lock()
 			seen = append(seen, messageInt)
+			mu.Unlock()
 		}
 
 		result["type"] = "broadcast_ok"
 		return n.Reply(msg, result)
-	})
 
-	n.Handle("read", func(msg maelstrom.Message) error {
-		result := map[string]any{}
+	}
+}
 
-		result["type"] = "read_ok"
-		result["messages"] = seen
-
-		return n.Reply(msg, result)
-	})
-
-	n.Handle("broadcast_ok", func(msg maelstrom.Message) error {
-		return nil
-	})
-
-	n.Handle("topology", func(msg maelstrom.Message) error {
+func TopologyHandler(n *maelstrom.Node, topology map[string][]string) func(msg maelstrom.Message) error {
+	return func(msg maelstrom.Message) error {
 		result := map[string]any{}
 		var body map[string]any
 		if err := json.Unmarshal(msg.Body, &body); err != nil {
@@ -96,23 +83,69 @@ func main() {
 
 		result["type"] = "topology_ok"
 		return n.Reply(msg, result)
+	}
+}
+
+func InitHandler(n *maelstrom.Node) func(msg maelstrom.Message) error {
+	return func(msg maelstrom.Message) error {
+		NodeID = n.ID()
+		return nil
+	}
+}
+
+func GossipHandler(n *maelstrom.Node) func(msg maelstrom.Message) error {
+	return func(msg maelstrom.Message) error {
+		var body map[string]any
+		err := json.Unmarshal(msg.Body, &body)
+		if err != nil {
+			return err
+		}
+
+		data, ok := body["data"].([]interface{})
+		if ok {
+			for _, val := range data {
+				valFloat, ok := val.(float64)
+				if ok {
+					valInt := int(valFloat)
+					if !slices.Contains(seen, valInt) {
+						mu.Lock()
+						seen = append(seen, valInt)
+						mu.Unlock()
+					}
+				}
+			}
+		}
+
+		return nil
+	}
+}
+
+func main() {
+	n := maelstrom.NewNode()
+	topology := map[string][]string{}
+
+	n.Handle("init", InitHandler(n))
+	n.Handle("broadcast", BroadcastHandler(n))
+	n.Handle("read", ReadHandler(n))
+	n.Handle("topology", TopologyHandler(n, topology))
+	n.Handle("broadcast_ok", func(msg maelstrom.Message) error {
+		return nil
 	})
+	n.Handle("gossip", GossipHandler(n))
 
 	go func() {
 		for {
 			for node := range topology {
 				result := map[string]any{}
-				result["type"] = "broadcast"
+				result["type"] = "gossip"
+				result["data"] = seen
 
-				for i := range seen {
-					if node != NodeID {
-						result["message"] = i
-						n.Send(node, result)
-					}
+				if node != NodeID && len(seen) > 0 {
+					n.Send(node, result)
 				}
 			}
+			time.Sleep(200 * time.Millisecond)
 		}
-		time.Sleep(2)
 	}()
 
 	err := n.Run()
@@ -120,43 +153,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func Send(n *maelstrom.Node, seen []int, dest string, msg map[string]any) {
-	go func() {
-		for _, val := range seen {
-			msg["message"] = val
-			n.Send(dest, msg)
-		}
-	}()
-}
-
-// take a confirmation message and knock it off the queue
-func CheckStatus(msg maelstrom.Message) error {
-	var body map[string]any
-	err := json.Unmarshal(msg.Body, &body)
-	if err != nil {
-		return err
-	}
-
-	// remove item from the queue if the broadcast is ok
-	if body["type"] == "broadcast_ok" {
-		result := string(msg.Body)
-		log.Printf("error message src: %s dest %s, raw %s", msg.Src, msg.Dest, result)
-
-		for idx, m := range queuedMessages {
-			data, _ := json.Marshal(m.Msg)
-			if (m.Source == msg.Dest) && (m.Destination == msg.Src) && (body["in_reply_to"] == m.Msg["msg_id"]) {
-				log.Printf("FOUND queued source %s queued destination %s queued %s", m.Source, m.Destination, data)
-				mu.Lock()
-				if idx < len(queuedMessages) {
-					queuedMessages = append(queuedMessages[:idx], queuedMessages[idx+1:]...)
-				}
-				mu.Unlock()
-				break
-			}
-
-		}
-	}
-	return nil
 }

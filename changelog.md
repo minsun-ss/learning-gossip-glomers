@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.5.0] - 2025-09-10
+
+### 🚀 Features
+
+- Figured out challenge 3d by reusing 3b code
+- Finished challenge 3e
+
+### ⚙️ Miscellaneous Tasks
+
+- Updated changelog
+
 ## [3.4.0] - 2025-09-10
 
 ### 🚀 Features

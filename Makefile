@@ -40,5 +40,12 @@
 	@./maelstrom/maelstrom test -w broadcast --bin ./maelstrom-broadcast2 --node-count 25 --time-limit 20 --rate 100 --latency 100
 	@rm -f maelstrom-broadcast2
 
+3e:
+	@echo "Testing broadcast part E..."
+	@rm -f maelstrom-broadcast3
+	@cd ms-broadcast3 && go build -o ../maelstrom-broadcast3
+	@./maelstrom/maelstrom test -w broadcast --bin ./maelstrom-broadcast3 --node-count 25 --time-limit 20 --rate 100 --latency 100
+	@rm -f maelstrom-broadcast3
+
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md
