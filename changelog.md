@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.3.0]
+
+### 🚀 Features
+
+- Officially finished 3c
+- Updated the challenge to test against 3c
+
 ## [3.2.0] - 2025-09-07
 
 ### 🚀 Features
