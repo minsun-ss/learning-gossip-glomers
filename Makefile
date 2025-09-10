@@ -33,5 +33,12 @@
 	@./maelstrom/maelstrom test -w broadcast --bin ./maelstrom-broadcast3 --node-count 5 --time-limit 20 --rate 10 --nemesis partition
 	@rm -f maelstrom-broadcast3
 
+3d:
+	@echo "Testing broadcast part D..."
+	@rm -f maelstrom-broadcast2
+	@cd ms-broadcast2 && go build -o ../maelstrom-broadcast2
+	@./maelstrom/maelstrom test -w broadcast --bin ./maelstrom-broadcast2 --node-count 25 --time-limit 20 --rate 100 --latency 100
+	@rm -f maelstrom-broadcast2
+
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md
