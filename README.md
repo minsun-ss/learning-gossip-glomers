@@ -19,5 +19,8 @@ I think the use of golang makes this easier than it could be? If I needed to pro
 - 3a was very straightforward on single node setup...
 - ...and so was 3b, if you are ok with thinking topology never changes once provided to you (which... probably seems wrong on a distributed setup)
 - I did not realize 3c existed until John told me about it. T_T .... 3 hours later, I implemented what I feel was the dumbest solution on the planet to make this work
-- 3d was dumb... cos I went to my 3b implementation ahahaha
-- 3e: cleaned up the code to look more "go" ish and changed the update to send a single gossip message instead of spamming more
+- 3d was a very dumb solution (for me) - since there were no partitions, I went back to my 3b solution and it worked out of the box.
+- 3e: cleaned up the code to look more "go" ish and changed the update to send a single gossip message instead of spamming more. Learned the hard way that Go's JSON marshalling marshals to float64 instead of int, and you have to go through float64 and recast to int to make it work. Think I probably could use some better error handling. Also discovered somewhat (belatedly) that the /store folder actually provides you the logs of your node's output to directly inspect instead of squinting at the command line. I feel moderately dumb for not realizing this.
+
+## Challenge 4:
+
