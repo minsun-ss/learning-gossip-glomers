@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.0] - 2025-09-17
+
+### 🚀 Features
+
+- Set up challenge 4
+- Finished challenge 4
+
 ## [3.5.0] - 2025-09-10
 
 ### 🚀 Features
