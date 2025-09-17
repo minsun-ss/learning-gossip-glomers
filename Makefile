@@ -47,5 +47,12 @@
 	@./maelstrom/maelstrom test -w broadcast --bin ./maelstrom-broadcast3 --node-count 25 --time-limit 20 --rate 100 --latency 100
 	@rm -f maelstrom-broadcast3
 
+4:
+	@echo "Testing grow only counter..."
+	@rm -f maelstrom-gcounter
+	@cd ms-gcounter && go build -o ../maelstrom-gcounter
+	@./maelstrom/maelstrom test -w g-counter --bin ./maelstrom-gcounter --node-count 3 --rate 100 --time-limit 20 --nemesis partition
+	@rm -f maelstrom-gcounter
+
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md

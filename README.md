@@ -24,3 +24,4 @@ I think the use of golang makes this easier than it could be? If I needed to pro
 
 ## Challenge 4:
 
+I thought I should've locked after every transaction and was using a separate key to track that, but it seemed to cause different threads to crash in various states of deadlock. Then I was like mm, every node knows what the total should be and that's always good, so have it periodically update the key value store with it in its own key and then aggregate it all periodically. That seemed to work in a non crashy way. Didn't really know how to handle when there was network outages to the key value store itself, though, there didn't seem a good way to grab multiple keys in a single transaction (which would've been nice).
