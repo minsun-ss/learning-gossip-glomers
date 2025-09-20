@@ -1,4 +1,4 @@
-# Gossip Glomers 
+# Gossip Glomers
 
 Notes: maelstrom is not happy with log/slog output to stdout
 
@@ -6,15 +6,15 @@ Part of Recurse Fall 2025 DDIA readings!
 
 # Thoughts
 
-## Challenge 1: 
+## Challenge 1:
 
 Very straightforward, more a setup than anything else.
 
-## Challenge 2: 
+## Challenge 2:
 
 I think the use of golang makes this easier than it could be? If I needed to provide an int ID, though, I think this might be more challenging.
 
-## Challenge 3: 
+## Challenge 3:
 
 - 3a was very straightforward on single node setup...
 - ...and so was 3b, if you are ok with thinking topology never changes once provided to you (which... probably seems wrong on a distributed setup)
@@ -24,4 +24,10 @@ I think the use of golang makes this easier than it could be? If I needed to pro
 
 ## Challenge 4:
 
-I thought I should've locked after every transaction and was using a separate key to track that, but it seemed to cause different threads to crash in various states of deadlock. Then I was like mm, every node knows what the total should be and that's always good, so have it periodically update the key value store with it in its own key and then aggregate it all periodically. That seemed to work in a non crashy way. Didn't really know how to handle when there was network outages to the key value store itself, though, there didn't seem a good way to grab multiple keys in a single transaction (which would've been nice).
+I thought I should've locked after every transaction and was using a separate key to track that, but it seemed to cause different threads to crash in various states of deadlock. Then I was like mm, every node knows what its own total should be and that's always good, so have it periodically update the value in the kv store with it under its own node id and then aggregate it all periodically. That seemed to work in a non crashy way. Didn't really know how to handle when there was network outages to the key value store itself, though, there didn't seem a good way to grab multiple keys in a single transaction (which would've been nice).
+
+## Challenge 5a:
+
+Implementing the requirements was not too tricky, although I got hung up on a bug for almost 2 hours due to me misreading the format of the poll - offset *first*, then msg, rather than msg, offset and one that Claude eventually pointed out to me was the bug after going down some unnecessary mutex rabbitholes.
+
+As this challenge goes, this one had a relatively straightforward race conditions on your data structure, so as long as you were threadsafe/locked your data structure with a mutex of some sort, it was mostly ok. Learned the difference between different type of go mutexes with this (e.g., RLock vs Lock).

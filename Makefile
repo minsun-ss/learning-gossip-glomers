@@ -54,5 +54,12 @@
 	@./maelstrom/maelstrom test -w g-counter --bin ./maelstrom-gcounter --node-count 3 --rate 100 --time-limit 20 --nemesis partition
 	@rm -f maelstrom-gcounter
 
+5a:
+	@echo "Testing kafka node part A..."
+	@rm -f maelstrom-kafka
+	@cd ms-kafka && go build -o ../maelstrom-kafka
+	@./maelstrom/maelstrom test -w kafka --bin ./maelstrom-kafka --node-count 1 --concurrency 2n --time-limit 20 --rate 1000
+	@rm -f maelstrom-kafka
+
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md
