@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.2.0] - 2025-09-22
+
+### 🚀 Features
+
+- Optimized 3 a bit, but could be better
+
 ## [5.1.0] - 2025-09-22
 
 ### 🚀 Features
