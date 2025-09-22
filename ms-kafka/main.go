@@ -53,7 +53,6 @@ func main() {
 		}
 
 		response["type"] = "send_ok"
-		log.Printf("WRITE: key=%s, value=%d, offset=%d", kkey, logkey, response["offset"])
 
 		return n.Reply(msg, response)
 	})

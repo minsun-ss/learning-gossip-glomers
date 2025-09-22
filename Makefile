@@ -1,3 +1,7 @@
+clean:
+	@echo "Wiping out the store..."
+	@rm -rf store
+
 1:
 	@echo "Testing gossip glomers echo..."
 	@rm -f maelstrom-echo
@@ -60,6 +64,13 @@
 	@cd ms-kafka && go build -o ../maelstrom-kafka
 	@./maelstrom/maelstrom test -w kafka --bin ./maelstrom-kafka --node-count 1 --concurrency 2n --time-limit 20 --rate 1000
 	@rm -f maelstrom-kafka
+
+5b:
+	@echo "Testing kafka node part B..."
+	@rm -f maelstrom-kafka2
+	@cd ms-kafka2 && go build -o ../maelstrom-kafka2
+	@./maelstrom/maelstrom test -w kafka --bin ./maelstrom-kafka2 --node-count 2 --concurrency 2n --time-limit 20 --rate 1000
+	@rm -f maelstrom-kafka2
 
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md
