@@ -72,5 +72,12 @@ clean:
 	@./maelstrom/maelstrom test -w kafka --bin ./maelstrom-kafka2 --node-count 2 --concurrency 2n --time-limit 20 --rate 1000
 	@rm -f maelstrom-kafka2
 
+5c:
+	@echo "Testing kafka node part C..."
+	@rm -f maelstrom-kafka3
+	@cd ms-kafka3 && go build -o ../maelstrom-kafka3
+	@./maelstrom/maelstrom test -w kafka --bin ./maelstrom-kafka3 --node-count 2 --concurrency 2n --time-limit 20 --rate 1000
+	@rm -f maelstrom-kafka3
+
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md
