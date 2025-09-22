@@ -31,3 +31,9 @@ I thought I should've locked after every transaction and was using a separate ke
 Implementing the requirements was not too tricky, although I got hung up on a bug for almost 2 hours due to me misreading the format of the poll - offset *first*, then msg, rather than msg, offset and one that Claude eventually pointed out to me was the bug after going down some unnecessary mutex rabbitholes.
 
 As this challenge goes, this one had a relatively straightforward race conditions on your data structure, so as long as you were threadsafe/locked your data structure with a mutex of some sort, it was mostly ok. Learned the difference between different type of go mutexes with this (e.g., RLock vs Lock).
+
+## Challenge 5b:
+
+This one I went back to having a separate lock per key to make this happen, since the keys are now being handled by multiple clients and a local key value map no longer cuts it for storage. The guarantee of linearizability of the key value store makes some of this easier, as you can use CompareAndSwap to swap locks without worrying about data races on the remote lock. 
+
+One of the bugs that took me a while to solve is that I needed to grab locks for both the send and the commit actions (since I was storing both by key), otherwise I'd throw errors on CompareAndSwap on update actions (which I kept in for decently strong guarantees on not having race conditions).
