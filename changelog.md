@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.1.0] - 2025-09-22
+
+### 🚀 Features
+
+- Solved kafka part b challenge
+
+### ⚙️ Miscellaneous Tasks
+
+- Updated changelog
+
 ## [5.0.0] - 2025-09-20
 
 ### 🚀 Features
