@@ -34,6 +34,52 @@ As this challenge goes, this one had a relatively straightforward race condition
 
 ## Challenge 5b:
 
-This one I went back to having a separate lock per key to make this happen, since the keys are now being handled by multiple clients and a local key value map no longer cuts it for storage. The guarantee of linearizability of the key value store makes some of this easier, as you can use CompareAndSwap to swap locks without worrying about data races on the remote lock. 
+This one I went back to having a separate lock per key to make this happen, since the keys are now being handled by multiple clients and a local key value map no longer cuts it for storage. The guarantee of linearizability of the key value store makes some of this easier, as you can use CompareAndSwap to swap locks without worrying about data races on the remote lock.
 
 One of the bugs that took me a while to solve is that I needed to grab locks for both the send and the commit actions (since I was storing both by key), otherwise I'd throw errors on CompareAndSwap on update actions (which I kept in for decently strong guarantees on not having race conditions).
+
+## Challenge 5c:
+
+Baseline:
+
+```
+ :availability {:valid? true, :ok-fraction 0.99237156},
+ :net {:all {:send-count 200998,
+             :recv-count 200998,
+             :msg-count 200998,
+             :msgs-per-op 11.274287},
+       :clients {:send-count 42486,
+                 :recv-count 42486,
+                 :msg-count 42486},
+       :servers {:send-count 158512,
+                 :recv-count 158512,
+                 :msg-count 158512,
+                 :msgs-per-op 8.891182},
+```
+
+After changing the commits to be a separate key:
+```
+:availability {:valid? true, :ok-fraction 0.99518573},
+:net {:all {:send-count 175694,
+            :recv-count 175694,
+            :msg-count 175694,
+            :msgs-per-op 9.611795},
+      :clients {:send-count 44330,
+                :recv-count 44330,
+                :msg-count 44330},
+      :servers {:send-count 131364,
+                :recv-count 131364,
+                :msg-count 131364,
+                :msgs-per-op 7.1866074},
+      :valid? true},
+```
+
+Given that I want to bring this down to around 6-7 ops, I think I have to find another way to reduce locking entirely.
+
+- Optimistically praying lock contention isn't that frequent is a lie. So now we do need to have lock contention.
+- So why not.... batch the jobs? You need to allocate an idx before batching, so no (if I keep the msgs, then maybe?)
+- Separating messages to individual keys reduces lock contention on send but increases polling costs to look them all up (went from 9 to 13 ops)
+- Routing messages to a single node to handle per key reduced ops to 7 but at the cost of availability going down the drain to .7 or below. Throughput drops a ton. This I imagine is similar to partitioning though.
+
+I think batching would be ideal in which I can provide indexes after the fact and not with the reply.
+Maybe I can by returning the msg much later?
