@@ -24,7 +24,7 @@ type KafkaCommits struct {
 	Committed map[string]int `json:"Committed"`
 }
 
-func UnmarshalMessage(kvstring any, kvBody *KafkaMessage) error {
+func UnmarshalMessage[T any](kvstring any, kvBody T) error {
 	if decodedBytes, err := base64.StdEncoding.DecodeString(kvstring.(string)); err != nil {
 		return err
 	} else {
@@ -33,18 +33,6 @@ func UnmarshalMessage(kvstring any, kvBody *KafkaMessage) error {
 		}
 		return nil
 	}
-}
-
-func UnmarshalCommits(kvstring any, kvBody *KafkaCommits) error {
-	if decodedBytes, err := base64.StdEncoding.DecodeString(kvstring.(string)); err != nil {
-		return err
-	} else {
-		if err := json.Unmarshal(decodedBytes, &kvBody); err != nil {
-			return fmt.Errorf("Json Unmarshalling Error: %v", err)
-		}
-		return nil
-	}
-
 }
 
 func main() {
@@ -169,7 +157,7 @@ func main() {
 
 		var kvBody KafkaCommits
 		knode, _ := kv.Read(ctx, "commits")
-		UnmarshalCommits(knode, &kvBody)
+		UnmarshalMessage(knode, &kvBody)
 
 		for key, val := range body["offsets"].(map[string]interface{}) {
 			positionFlt := val.(float64)
@@ -200,7 +188,7 @@ func main() {
 
 		var kvBody KafkaCommits
 		knode, _ := kv.Read(ctx, "commits")
-		UnmarshalCommits(knode, &kvBody)
+		UnmarshalMessage(knode, &kvBody)
 		for _, v := range body["keys"].([]interface{}) {
 			key := v.(string)
 			// keys that do not exist on the node can be omitted
