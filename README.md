@@ -87,3 +87,11 @@ Maybe I can by returning the msg much later?
 # Challenge 6a
 
 I passed this challenge, but think the edge cases on the test aren't tested for this portion that rigorously. Is each transaction meant t  be atomic? But not sure.
+
+# Challenge 6b
+
+The code from 6a (or ms-kv) worked just fine. Feels like this allows a lot of unrepresentable states but will not argue with it for now... (I guess in a state of uncommitted all's fair)
+
+# Challenge 6c
+
+The code from 6a also worked here. But I'm also reasonably positive that in a multinode setup my implementation should be wrong, unless the keys are also partitioned to specific nodes? Also not sure if my transactions are atomic either given that I don't lock on read, either, so you can have a few transactions interleave each other depending on who grabs the kv lock at any given point. But not sure if each transaction is meant to be atomic together.
