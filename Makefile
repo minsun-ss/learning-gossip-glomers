@@ -79,10 +79,34 @@ clean:
 	@./maelstrom/maelstrom test -w kafka --bin ./maelstrom-kafka3 --node-count 2 --concurrency 2n --time-limit 20 --rate 1000
 	@rm -f maelstrom-kafka3
 
-6:
+6a:
 	@echo "Testing kv store part A..."
 	@rm -f maelstrom-kv
 	@cd ms-kv && go build -o ../maelstrom-kv
 	@./maelstrom/maelstrom test -w txn-rw-register --bin ./maelstrom-kv --node-count 1 --time-limit 20 --rate 1000 --concurrency 2n --consistency-models read-uncommitted --availability total
+	@rm -f maelstrom-kv
+
+6b1:
+	@echo "Testing kv store part B..."
+	@rm -f maelstrom-kv
+	@cd ms-kv && go build -o ../maelstrom-kv
+	@./maelstrom/maelstrom test -w txn-rw-register --bin ./maelstrom-kv --node-count 2 --concurrency 2n --time-limit 20 --rate 1000 --consistency-models read-uncommitted
+	@rm -f maelstrom-kv
+
+6b2:
+	@echo "Testing kv store part B..."
+	@rm -f maelstrom-kv
+	@cd ms-kv && go build -o ../maelstrom-kv
+	@./maelstrom/maelstrom test -w txn-rw-register --bin ./maelstrom-kv --node-count 2 --concurrency 2n --time-limit 20 --rate 1000 --consistency-models read-uncommitted --availability total --nemesis partition
+	@rm -f maelstrom-kv
+
+
+6c:
+	@echo "Testing kv store part C..."
+	@rm -f maelstrom-kv
+	@cd ms-kv && go build -o ../maelstrom-kv
+	@./maelstrom/maelstrom test -w txn-rw-register --bin ./maelstrom-kv --node-count 2 --concurrency 2n --time-limit 20 --rate 1000 --consistency-models read-committed --availability total –-nemesis partition
+	@rm -f maelstrom-kv
+
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md
