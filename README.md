@@ -83,3 +83,7 @@ Given that I want to bring this down to around 6-7 ops, I think I have to find a
 
 I think batching would be ideal in which I can provide indexes after the fact and not with the reply.
 Maybe I can by returning the msg much later?
+
+# Challenge 6a
+
+I passed this challenge, but think the edge cases on the test aren't tested for this portion that rigorously. Is each transaction meant t  be atomic? But not sure.
