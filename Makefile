@@ -79,5 +79,10 @@ clean:
 	@./maelstrom/maelstrom test -w kafka --bin ./maelstrom-kafka3 --node-count 2 --concurrency 2n --time-limit 20 --rate 1000
 	@rm -f maelstrom-kafka3
 
+6:
+	@echo "Testing kv store part A..."
+	@rm -f maelstrom-kv
+	@cd ms-kv && go build -o ../maelstrom-kv
+	@./maelstrom/maelstrom test -w txn-rw-register --bin ./maelstrom-kv --node-count 1 --time-limit 20 --rate 1000 --concurrency 2n --consistency-models read-uncommitted --availability total
 changelog:
 	git cliff --unreleased --tag v$(shell cat VERSION) --prepend changelog.md
