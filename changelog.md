@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.0] - 2025-09-26
+
+### 🚀 Features
+
+- Solved 6a
+
 ## [5.2.0] - 2025-09-22
 
 ### 🚀 Features
